@@ -1,0 +1,50 @@
+services:
+  proxy:
+    image: traefik:v3.6
+    pre_start:
+      - image: alpine/openssl:3.5.5
+        command: ["req", "-x509", "-newkey", "rsa:2048", "-nodes", "-keyout", "/certs/localhost.key", "-out", "/certs/localhost.crt", "-days", "30", "-subj", "/CN=localhost", "-addext", "subjectAltName=DNS:localhost"]
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.file.filename=/etc/traefik/tls.yaml
+      - --entrypoints.websecure.address=:443
+    ports:
+      - "8443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./tls.yaml:/etc/traefik/tls.yaml:ro
+      - certificates:/certs
+
+  api:
+    image: ghcr.io/mightyhelper/docker-lecture:v1
+    build: ../v1-compose
+    environment:
+      DATABASE_URL: postgresql://demo:demo@db:5432/demo
+    depends_on:
+      db:
+        condition: service_healthy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api.rule=Host(`localhost`)
+      - traefik.http.routers.api.entrypoints=websecure
+      - traefik.http.routers.api.tls=true
+      - traefik.http.services.api.loadbalancer.server.port=8000
+
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: demo
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U demo -d demo"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres-data:
+  certificates:
