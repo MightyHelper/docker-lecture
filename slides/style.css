@@ -1,0 +1,15 @@
+.slidev-layout {
+  background: #000;
+  color: #f4f4f4;
+  padding: 4rem 5rem;
+}
+.slidev-layout h1 { font-size: 3rem; font-weight: 600; letter-spacing: -0.03em; }
+.slidev-layout h2 { color: #aaa; font-size: 1.5rem; }
+.slidev-layout li { margin: 0.55rem 0; }
+.slidev-layout pre { font-size: 1.1rem; }
+.slidev-layout code { color: #a5d8ff; }
+.timeline { display: flex; justify-content: space-between; margin-top: 5rem; gap: 1rem; }
+.timeline strong { display: block; color: #a5d8ff; font-size: 2rem; }
+.timeline span { color: #ddd; font-size: 1.15rem; }
+.flow { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; margin-top: 4rem; font-size: 1.7rem; }
+.flow b { color: #a5d8ff; font-weight: 400; }

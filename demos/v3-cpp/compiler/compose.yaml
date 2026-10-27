@@ -1,0 +1,6 @@
+services:
+  hello:
+    image: hello:compiler
+    build:
+      context: ..
+      dockerfile: compiler/Dockerfile

@@ -1,0 +1,6 @@
+services:
+  hello:
+    image: hello:multistage
+    build:
+      context: ..
+      dockerfile: multistage/Dockerfile

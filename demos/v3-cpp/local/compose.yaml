@@ -1,0 +1,6 @@
+services:
+  hello:
+    image: hello:local
+    build:
+      context: ..
+      dockerfile: local/Dockerfile
